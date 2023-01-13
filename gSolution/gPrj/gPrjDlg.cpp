@@ -9,6 +9,7 @@
 #include "afxdialogex.h"
 
 #include <iostream>
+using namespace std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -24,15 +25,15 @@ class CAboutDlg : public CDialogEx
 public:
 	CAboutDlg();
 
-// 대화 상자 데이터입니다.
+	// 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ABOUTBOX };
 #endif
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
-// 구현입니다.
+	// 구현입니다.
 protected:
 	DECLARE_MESSAGE_MAP()
 };
@@ -186,26 +187,28 @@ void CgPrjDlg::callFunc(int n)
 	//int nDate = n;
 	std::cout << n << std::endl;
 }
-using namespace std;
+
 void CgPrjDlg::OnBnClickedBtnTest()
 {
 	unsigned char* fm = (unsigned char*)m_pDlgImage->m_Image.GetBits();
 	int nWidth = m_pDlgImage->m_Image.GetWidth();
 	int nHeight = m_pDlgImage->m_Image.GetHeight();
 	int nPitch = m_pDlgImage->m_Image.GetPitch();
-	memset(fm, 0xff, nWidth * nHeight);
+	memset(fm, 0, nWidth * nHeight);
 
-	for (int k = 0; k < 100; k++) {
+	for (int k = 0; k < MAX_POINT; k++) {
 		int x = rand() % nWidth;
 		int y = rand() % nHeight;
-		fm[y * nPitch + x] = 0;
+		fm[y * nPitch + x] = rand()%0xff;
 	}
 
 	int nIndex = 0;
+	int nTh = 100;
 	for (int j = 0; j < nHeight; j++) {
 		for (int i = 0; i < nWidth; i++) {
-			if (fm[j * nPitch + i] == 0) {
-				if (m_pDlgImageResult->m_nDataCount < 100) {
+			if (fm[j * nPitch + i] > nTh) {
+				if (m_pDlgImageResult->m_nDataCount < MAX_POINT) {
+					//cout << nIndex << "," << i << "," << j << endl;
 					m_pDlgImageResult[nIndex].m_ptData[nIndex].x = i;
 					m_pDlgImageResult[nIndex].m_ptData[nIndex].y = j;
 					m_pDlgImageResult->m_nDataCount = ++nIndex;
